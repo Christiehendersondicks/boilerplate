@@ -4,6 +4,26 @@ A production-oriented starter kit for building AI-powered web apps with an agent
 
 The goal is simple: install the starter, describe the product you want to build, and let your coding agent help turn the boilerplate into your actual POC, MVP, or internal tool.
 
+## Repository Details
+
+- **Package name:** `agentic-coding-starter-kit`
+- **Current version:** `1.1.2`
+- **Repository:** `https://github.com/Dacoharmse/boilerplate`
+- **Default branch:** `master`
+- **Package manager:** `pnpm` is preferred, with `npm` and `yarn` supported for generated apps.
+- **Runtime:** Node.js 18 or newer.
+- **Application framework:** Next.js 16 App Router with React 19 and TypeScript.
+- **Styling and UI:** Tailwind CSS, shadcn/ui, Radix UI primitives, Lucide icons, and the project design system in `DESIGN.md`.
+- **Authentication:** Better Auth with email/password enabled by default, including registration, login, protected routes, password reset, and email verification flows.
+- **Database:** PostgreSQL with Drizzle ORM, `drizzle.config.ts`, generated migrations, and a local Docker Compose database.
+- **AI integration:** Vercel AI SDK with OpenRouter through `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`.
+- **File storage:** Local uploads during development and Vercel Blob when `BLOB_READ_WRITE_TOKEN` is configured.
+- **CLI package:** `create-agentic-app`, stored in `create-agentic-app/`, copies the template and scaffolds new projects.
+- **Generated template:** `create-agentic-app/template/` contains the app files installed by the CLI.
+- **Agent workflow:** `AGENTS.md`, `CLAUDE.md`, `.agents/skills/`, `.claude/skills/`, and `specs/` define planning, implementation, review, and shipping workflows.
+- **Quality gates:** `pnpm lint`, `pnpm typecheck`, `pnpm check`, `pnpm format:check`, and `pnpm build:ci`.
+- **Deployment target:** Vercel is recommended, with production environment variables configured before build or migration steps.
+
 ## What You Get
 
 - **Next.js 16 and React 19** with the App Router
@@ -403,6 +423,6 @@ This project is licensed under the MIT License.
 
 ## Need Help?
 
-- Check the repository issues: [github.com/leonvanzyl/agentic-coding-starter-kit/issues](https://github.com/leonvanzyl/agentic-coding-starter-kit/issues)
+- Check the repository issues: [github.com/Dacoharmse/boilerplate/issues](https://github.com/Dacoharmse/boilerplate/issues)
 - Review `AGENTS.md`, `CLAUDE.md`, and `DESIGN.md`
 - Open a new issue with the exact setup steps, error output, and environment details
