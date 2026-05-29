@@ -35,9 +35,21 @@ export function SiteHeader() {
               </span>
             </Link>
           </h1>
-          <div className="flex items-center gap-2 sm:gap-4" role="group" aria-label="User actions">
-            <UserProfile />
-            <ModeToggle />
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Link
+              href="/picks"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Picks
+            </Link>
+            <div
+              className="flex items-center gap-2 sm:gap-4"
+              role="group"
+              aria-label="User actions"
+            >
+              <UserProfile />
+              <ModeToggle />
+            </div>
           </div>
         </nav>
       </header>
