@@ -31,6 +31,8 @@
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@vercel/blob": "^2.3.3",
+    "@whop/api": "^0.0.51",
+    "@whop/react": "^0.3.2",
     "ai": "^5.0.188",
     "better-auth": "^1.6.11",
     "class-variance-authority": "^0.7.1",
@@ -44,8 +46,10 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
+    "recharts": "^3.8.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
+    "yahoo-finance2": "^3.14.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {

@@ -29,8 +29,9 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
-            key: "X-Frame-Options",
-            value: "DENY",
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://whop.com https://*.whop.com https://*.apps.whop.com;",
           },
           {
             key: "X-Content-Type-Options",

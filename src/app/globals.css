@@ -172,4 +172,71 @@
       transparent 50%
     );
   }
+
+  /* Apple-style glassmorphism — translucent frosted panel. */
+  .glass {
+    background: color-mix(in oklch, var(--card) 65%, transparent);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid color-mix(in oklch, var(--border) 100%, transparent);
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.08);
+  }
+
+  .dark .glass {
+    background: color-mix(in oklch, var(--card) 55%, transparent);
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.35);
+  }
+
+  /* More opaque / stronger blur — nav bars & sticky headers. */
+  .glass-strong {
+    background: color-mix(in oklch, var(--card) 80%, transparent);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid color-mix(in oklch, var(--border) 100%, transparent);
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.1);
+  }
+
+  .dark .glass-strong {
+    background: color-mix(in oklch, var(--card) 72%, transparent);
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.4);
+  }
+
+  /* Interactive lift for glass surfaces. */
+  .glass-hover {
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .glass-hover:hover {
+    background: color-mix(in oklch, var(--card) 78%, transparent);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 12px 40px oklch(0 0 0 / 0.12);
+  }
+
+  .dark .glass-hover:hover {
+    background: color-mix(in oklch, var(--card) 68%, transparent);
+    box-shadow: 0 12px 40px oklch(0 0 0 / 0.45);
+  }
+
+  /* Soft Apple-like gradient backdrop using accent/primary tokens at low alpha. */
+  .hero-gradient {
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 20% 0%,
+        color-mix(in oklch, var(--primary) 14%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 70% 60% at 90% 10%,
+        color-mix(in oklch, var(--accent) 18%, transparent),
+        transparent 55%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--primary) 6%, transparent),
+        transparent 40%
+      );
+  }
 }

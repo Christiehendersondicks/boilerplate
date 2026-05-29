@@ -12,6 +12,18 @@
       "sourceType": "github",
       "computedHash": "9ab075b5061be2a5f299c10505667345cc1ec76e8de4120901cfd586643e776f"
     },
+    "earnings-analysis": {
+      "source": "anthropics/financial-services",
+      "sourceType": "github",
+      "skillPath": "plugins/vertical-plugins/equity-research/skills/earnings-analysis/SKILL.md",
+      "computedHash": "57da904968b9c28d0538f0876078601e662aa12932aeffda45391cd832eb5dcd"
+    },
+    "finance-sentiment": {
+      "source": "himself65/finance-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/data-providers/skills/finance-sentiment/SKILL.md",
+      "computedHash": "e53e73f0c63a3ee617181775b1084463b3a995bccd6b4ee250fb9838e6a5c1db"
+    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
@@ -36,6 +48,18 @@
       "source": "microsoft/playwright-cli",
       "sourceType": "github",
       "computedHash": "675811a7e7f958e6544f9c6bc53993c85fe39e72c5820a60d9d46bd169eddc32"
+    },
+    "pp-yahoo-finance": {
+      "source": "mvanhorn/printing-press-library",
+      "sourceType": "github",
+      "skillPath": "cli-skills/pp-yahoo-finance/SKILL.md",
+      "computedHash": "7865782a2905c1879442831be3f339e04ebe387e52d4cb99318ea63a93f0c75d"
+    },
+    "returns-analysis": {
+      "source": "anthropics/financial-services",
+      "sourceType": "github",
+      "skillPath": "plugins/vertical-plugins/private-equity/skills/returns-analysis/SKILL.md",
+      "computedHash": "5a0d9a63204c8cedacb4c4c07dfe0e9d27f50298f1478e7a0672953337b9b5d5"
     },
     "shadcn": {
       "source": "shadcn/ui",

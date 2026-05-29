@@ -1,4 +1,15 @@
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  index,
+  uuid,
+  jsonb,
+  integer,
+  real,
+  unique,
+} from "drizzle-orm/pg-core";
 
 // IMPORTANT! ID fields should ALWAYS use UUID types, EXCEPT the BetterAuth tables.
 
@@ -80,3 +91,67 @@ export const verification = pgTable("verification", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const picks = pgTable(
+  "picks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    symbol: text("symbol").notNull(),
+    name: text("name"),
+    // 'BUY' | 'HOLD' | 'SELL' — stored as plain text
+    signal: text("signal").notNull(),
+    // 0-100
+    conviction: integer("conviction").notNull(),
+    technicalScore: real("technical_score"),
+    fundamentalScore: real("fundamental_score"),
+    entry: real("entry"),
+    target: real("target"),
+    stop: real("stop"),
+    price: real("price"),
+    // raw scoring breakdown
+    scores: jsonb("scores"),
+    generatedAt: timestamp("generated_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("picks_symbol_idx").on(table.symbol),
+    index("picks_generated_at_idx").on(table.generatedAt),
+  ]
+);
+
+export const analysisCache = pgTable(
+  "analysis_cache",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    symbol: text("symbol").notNull(),
+    model: text("model"),
+    narrative: jsonb("narrative").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [index("analysis_cache_symbol_idx").on(table.symbol)]
+);
+
+export const quoteCache = pgTable(
+  "quote_cache",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    symbol: text("symbol").notNull().unique(),
+    payload: jsonb("payload").notNull(),
+    fetchedAt: timestamp("fetched_at").defaultNow().notNull(),
+  },
+  (table) => [index("quote_cache_symbol_idx").on(table.symbol)]
+);
+
+export const watchlist = pgTable(
+  "watchlist",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    // WHOP user id — plain text, not a FK to the user table
+    userId: text("user_id").notNull(),
+    symbol: text("symbol").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    unique("watchlist_user_symbol_unique").on(table.userId, table.symbol),
+    index("watchlist_user_id_idx").on(table.userId),
+  ]
+);
