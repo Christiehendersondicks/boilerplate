@@ -1,11 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import {
-  Activity,
-  Crosshair,
-  Gauge,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
+import { Activity, Crosshair, Gauge, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -63,11 +58,16 @@ export default function Home() {
         {/* Hero */}
         <section className="animate-fade-up space-y-6 text-center">
           <div className="mb-2 flex items-center justify-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-              <TrendingUp className="h-7 w-7 text-primary" />
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Stock Picks logo"
+              width={1000}
+              height={478}
+              priority
+              className="h-12 w-auto invert dark:invert-0"
+            />
             <h1 className="bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent">
-              2G&apos;s Stock Picks
+              Stock Picks
             </h1>
           </div>
           <p className="mx-auto max-w-2xl text-xl text-muted-foreground">

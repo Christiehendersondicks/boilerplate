@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
 import { ModeToggle } from "./ui/mode-toggle";
 
 export function SiteHeader() {
@@ -21,16 +21,18 @@ export function SiteHeader() {
             <Link
               href="/"
               className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-              aria-label="2G's Stock Picks - Go to homepage"
+              aria-label="Stock Picks - Go to homepage"
             >
-              <div
-                className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10"
-                aria-hidden="true"
-              >
-                <TrendingUp className="h-5 w-5" />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Stock Picks logo"
+                width={1000}
+                height={478}
+                priority
+                className="h-7 w-auto invert dark:invert-0"
+              />
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                2G&apos;s Stock Picks
+                Stock Picks
               </span>
             </Link>
           </h1>

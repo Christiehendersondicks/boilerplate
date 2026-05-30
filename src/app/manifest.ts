@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "2G's Stock Picks",
-    short_name: "2G Picks",
+    name: "Stock Picks",
+    short_name: "Stock Picks",
     description:
       "Members-only stock picks and AI research — technical + fundamental signals, watchlist, and per-symbol analysis.",
     start_url: "/",

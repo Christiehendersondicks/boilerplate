@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const APP_NAME = "2G's Stock Picks";
+const APP_NAME = "Stock Picks";
 const APP_DESCRIPTION =
   "Members-only stock picks and AI research — technical + fundamental signals, watchlist, and per-symbol analysis.";
 
