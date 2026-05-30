@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
-import { UserProfile } from "@/components/auth/user-profile";
 import { ModeToggle } from "./ui/mode-toggle";
 
 export function SiteHeader() {
@@ -42,14 +41,7 @@ export function SiteHeader() {
             >
               Picks
             </Link>
-            <div
-              className="flex items-center gap-2 sm:gap-4"
-              role="group"
-              aria-label="User actions"
-            >
-              <UserProfile />
-              <ModeToggle />
-            </div>
+            <ModeToggle />
           </div>
         </nav>
       </header>
