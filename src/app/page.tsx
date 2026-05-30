@@ -1,9 +1,9 @@
 import Link from "next/link";
 import {
+  Activity,
   Crosshair,
   Gauge,
   Sparkles,
-  Star,
   TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,9 +32,9 @@ const FEATURES = [
     body: "Every pick carries a grounded equity-research narrative: summary, bull case, bear case, and the key risks to watch.",
   },
   {
-    icon: Star,
-    title: "Live watchlist",
-    body: "Star any symbol and track it with live quotes and daily change in one place.",
+    icon: Activity,
+    title: "Tracked to exit",
+    body: "Each pick stays on the board while it's live and is closed automatically once price hits its target or stop.",
   },
 ] as const;
 
@@ -51,8 +51,8 @@ const STEPS = [
   },
   {
     n: 3,
-    title: "You read & track",
-    body: "Open a pick for its AI thesis and price levels, and star what you're watching.",
+    title: "You get the breakdown",
+    body: "Open a pick for its AI thesis and price levels; it stays live until target or stop is hit.",
   },
 ] as const;
 
@@ -71,16 +71,13 @@ export default function Home() {
             </h1>
           </div>
           <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-            Members-only stock picks that pair a technical + fundamental scoring
-            engine with AI equity research — signals, price levels, and a
-            watchlist in one place.
+            Autonomous stock picks that pair a technical + fundamental scoring
+            engine with AI equity research — high-conviction buys with price
+            levels, tracked until they exit.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg">
-              <Link href="/picks">View Picks</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/watchlist">My Watchlist</Link>
+              <Link href="/picks">View Active Picks</Link>
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">

@@ -2,24 +2,17 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
-import { toast } from "sonner";
 import { PickCard } from "@/components/picks/pick-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Pick, WatchItem } from "@/lib/picks-types";
+import type { Pick } from "@/lib/picks-types";
 
 export default function PicksPage() {
   const [picks, setPicks] = useState<Pick[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [watched, setWatched] = useState<Set<string>>(new Set());
 
   const loadPicks = useCallback(async () => {
     try {
       const res = await fetch("/api/picks", { cache: "no-store" });
-      if (res.status === 401) {
-        setError("Sign in through Whop to view picks.");
-        setPicks([]);
-        return;
-      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as { picks: Pick[] };
       setError(null);
@@ -30,59 +23,10 @@ export default function PicksPage() {
     }
   }, []);
 
-  const loadWatchlist = useCallback(async () => {
-    try {
-      const res = await fetch("/api/watchlist", { cache: "no-store" });
-      if (!res.ok) return; // 401 etc — leave watchlist empty
-      const data = (await res.json()) as { watchlist: WatchItem[] };
-      setWatched(new Set(data.watchlist.map((w) => w.symbol)));
-    } catch {
-      // non-fatal
-    }
-  }, []);
-
   useEffect(() => {
-    // Mount fetch: both loaders only setState after their awaited responses, so
-    // the cascading-render concern the rule guards against doesn't apply here.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadPicks();
-    loadWatchlist();
-  }, [loadPicks, loadWatchlist]);
-
-  const toggleWatch = useCallback(
-    async (symbol: string) => {
-      const isWatched = watched.has(symbol);
-      // optimistic
-      setWatched((prev) => {
-        const next = new Set(prev);
-        if (isWatched) next.delete(symbol);
-        else next.add(symbol);
-        return next;
-      });
-      try {
-        const res = isWatched
-          ? await fetch(`/api/watchlist?symbol=${encodeURIComponent(symbol)}`, {
-              method: "DELETE",
-            })
-          : await fetch("/api/watchlist", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ symbol }),
-            });
-        if (!res.ok) throw new Error();
-      } catch {
-        // revert on failure
-        setWatched((prev) => {
-          const next = new Set(prev);
-          if (isWatched) next.add(symbol);
-          else next.delete(symbol);
-          return next;
-        });
-        toast.error("Could not update watchlist.");
-      }
-    },
-    [watched]
-  );
+  }, [loadPicks]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -92,9 +36,9 @@ export default function PicksPage() {
             <TrendingUp className="size-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Picks</h1>
+            <h1 className="text-3xl font-bold">Active Picks</h1>
             <p className="text-sm text-muted-foreground">
-              High-conviction buys, generated daily after market close.
+              High-conviction buys, live until target or stop is hit.
             </p>
           </div>
         </header>
@@ -113,18 +57,13 @@ export default function PicksPage() {
           </div>
         ) : picks.length === 0 && !error ? (
           <div className="rounded-lg border border-dashed border-border py-16 text-center text-muted-foreground">
-            No picks yet. The scanner publishes new buys after each market
-            close — check back soon.
+            No active picks right now. The scanner publishes new buys after each
+            market close — check back soon.
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {picks.map((pick) => (
-              <PickCard
-                key={pick.id}
-                pick={pick}
-                watched={watched.has(pick.symbol)}
-                onToggleWatch={toggleWatch}
-              />
+              <PickCard key={pick.id} pick={pick} />
             ))}
           </div>
         )}

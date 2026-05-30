@@ -1,6 +1,5 @@
 "use client";
 
-import { Star, StarOff } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -11,7 +10,6 @@ import {
 } from "recharts";
 import { AnalysisDialog } from "@/components/picks/analysis-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -41,11 +39,9 @@ function scoreColor(v: number): string {
 
 interface PickCardProps {
   pick: Pick;
-  watched: boolean;
-  onToggleWatch: (symbol: string) => void;
 }
 
-export function PickCard({ pick, watched, onToggleWatch }: PickCardProps) {
+export function PickCard({ pick }: PickCardProps) {
   const breakdown = pick.scores
     ? [
         { name: "Trend", v: pick.scores.trend },
@@ -77,19 +73,6 @@ export function PickCard({ pick, watched, onToggleWatch }: PickCardProps) {
             </p>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={watched ? "Remove from watchlist" : "Add to watchlist"}
-          aria-pressed={watched}
-          onClick={() => onToggleWatch(pick.symbol)}
-        >
-          {watched ? (
-            <Star className="size-4 fill-current text-amber-500" />
-          ) : (
-            <StarOff className="size-4" />
-          )}
-        </Button>
       </CardHeader>
 
       <CardContent className="space-y-4">

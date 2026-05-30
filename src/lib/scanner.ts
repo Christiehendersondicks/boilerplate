@@ -1,3 +1,4 @@
+import { and, eq } from "drizzle-orm";
 import YahooFinance from "yahoo-finance2";
 import { db } from "./db";
 import { getFundamentals, getHistory, getQuote } from "./market";
@@ -20,8 +21,10 @@ const MAX_UNIVERSE = 40;
 export interface ScanSummary {
   scanned: number;
   saved: number;
+  closed: number;
   threshold: number;
   savedSymbols: string[];
+  closedSymbols: { symbol: string; outcome: string }[];
   errors: { symbol: string; error: string }[];
 }
 
@@ -53,18 +56,69 @@ async function buildUniverse(): Promise<string[]> {
 }
 
 /**
- * Autonomous pick generation: score the day's active/trending universe and
- * persist only BUY signals at or above the conviction threshold. This is the
- * ONLY path that writes to `picks` — members never trigger it.
+ * Evaluate every ACTIVE pick against its current price and close the ones that
+ * have hit their target (take-profit) or stop. Returns the closed symbols and
+ * the set still open (so the scan won't re-add a name that's already live).
+ */
+async function reconcileOpenPicks(): Promise<{
+  closed: { symbol: string; outcome: string }[];
+  stillOpen: Set<string>;
+}> {
+  const open = await db
+    .select()
+    .from(picks)
+    .where(eq(picks.status, "ACTIVE"));
+
+  const closed: { symbol: string; outcome: string }[] = [];
+  const stillOpen = new Set<string>();
+
+  for (const pick of open) {
+    let price: number | null = null;
+    try {
+      price = (await getQuote(pick.symbol)).price;
+    } catch {
+      // If the quote fails, leave the pick open and try again next run.
+    }
+
+    let outcome: "TARGET_HIT" | "STOP_HIT" | null = null;
+    if (price != null) {
+      if (pick.target != null && price >= pick.target) outcome = "TARGET_HIT";
+      else if (pick.stop != null && price <= pick.stop) outcome = "STOP_HIT";
+    }
+
+    if (outcome) {
+      await db
+        .update(picks)
+        .set({ status: outcome, closedAt: new Date(), closePrice: price })
+        .where(eq(picks.id, pick.id));
+      closed.push({ symbol: pick.symbol, outcome });
+    } else {
+      stillOpen.add(pick.symbol);
+    }
+  }
+
+  return { closed, stillOpen };
+}
+
+/**
+ * Autonomous pick generation: first reconcile open picks (take-profit / stop),
+ * then score the day's active/trending universe and persist only BUY signals at
+ * or above the conviction threshold — skipping symbols that already have a live
+ * pick. This is the ONLY path that writes to `picks`; members never trigger it.
  */
 export async function runScan(): Promise<ScanSummary> {
   const threshold = convictionThreshold();
+
+  const { closed, stillOpen } = await reconcileOpenPicks();
   const universe = await buildUniverse();
 
   const savedSymbols: string[] = [];
   const errors: { symbol: string; error: string }[] = [];
 
   for (const symbol of universe) {
+    // Don't stack a second pick on a symbol that's already live.
+    if (stillOpen.has(symbol)) continue;
+
     try {
       const [quote, history, fundamentals] = await Promise.all([
         getQuote(symbol),
@@ -93,6 +147,7 @@ export async function runScan(): Promise<ScanSummary> {
         scores: result.breakdown,
       });
       savedSymbols.push(symbol);
+      stillOpen.add(symbol);
     } catch (err) {
       errors.push({
         symbol,
@@ -104,8 +159,20 @@ export async function runScan(): Promise<ScanSummary> {
   return {
     scanned: universe.length,
     saved: savedSymbols.length,
+    closed: closed.length,
     threshold,
     savedSymbols,
+    closedSymbols: closed,
     errors,
   };
+}
+
+/** Whether a symbol currently has a live (ACTIVE) pick. Used to gate analysis. */
+export async function hasActivePick(symbol: string): Promise<boolean> {
+  const [row] = await db
+    .select({ id: picks.id })
+    .from(picks)
+    .where(and(eq(picks.symbol, symbol), eq(picks.status, "ACTIVE")))
+    .limit(1);
+  return Boolean(row);
 }

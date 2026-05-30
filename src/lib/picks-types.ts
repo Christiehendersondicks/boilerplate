@@ -27,14 +27,10 @@ export interface Pick {
   stop: number | null;
   price: number | null;
   scores: ScoreBreakdown | null;
+  status: "ACTIVE" | "TARGET_HIT" | "STOP_HIT";
+  closedAt: string | null;
+  closePrice: number | null;
   generatedAt: string; // ISO string over the wire
-}
-
-export interface WatchItem {
-  id: string;
-  userId: string;
-  symbol: string;
-  createdAt: string;
 }
 
 export interface Narrative {

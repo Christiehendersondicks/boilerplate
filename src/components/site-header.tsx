@@ -42,12 +42,6 @@ export function SiteHeader() {
             >
               Picks
             </Link>
-            <Link
-              href="/watchlist"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Watchlist
-            </Link>
             <div
               className="flex items-center gap-2 sm:gap-4"
               role="group"
