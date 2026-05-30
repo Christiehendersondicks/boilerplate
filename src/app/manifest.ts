@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Agentic Coding Boilerplate",
-    short_name: "Agentic",
+    name: "2G's Stock Picks",
+    short_name: "2G Picks",
     description:
-      "Complete agentic coding boilerplate with authentication, database, AI integration, and modern tooling",
+      "Members-only stock picks and AI research — technical + fundamental signals, watchlist, and per-symbol analysis.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

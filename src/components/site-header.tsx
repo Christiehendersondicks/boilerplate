@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bot } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { UserProfile } from "@/components/auth/user-profile";
 import { ModeToggle } from "./ui/mode-toggle";
 
@@ -22,16 +22,16 @@ export function SiteHeader() {
             <Link
               href="/"
               className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-              aria-label="Starter Kit - Go to homepage"
+              aria-label="2G's Stock Picks - Go to homepage"
             >
               <div
                 className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10"
                 aria-hidden="true"
               >
-                <Bot className="h-5 w-5" />
+                <TrendingUp className="h-5 w-5" />
               </div>
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Starter Kit
+                2G&apos;s Stock Picks
               </span>
             </Link>
           </h1>
@@ -41,6 +41,12 @@ export function SiteHeader() {
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               Picks
+            </Link>
+            <Link
+              href="/watchlist"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Watchlist
             </Link>
             <div
               className="flex items-center gap-2 sm:gap-4"
