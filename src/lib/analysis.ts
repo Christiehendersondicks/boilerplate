@@ -7,10 +7,6 @@ import { getFundamentals, getHistory, getQuote } from "./market";
 import { analysisCache } from "./schema";
 import { scoreSymbol } from "./scoring";
 
-// How long a cached narrative stays fresh. Theses don't need to regenerate on
-// every view — a stale window keeps token spend sane.
-const ANALYSIS_TTL_MS = 12 * 60 * 60 * 1000; // 12h
-
 export const narrativeSchema = z.object({
   summary: z.string().describe("2-3 sentence plain-English thesis"),
   bull: z.array(z.string()).describe("3-5 bullish points"),
@@ -32,9 +28,11 @@ export interface AnalysisResult {
 }
 
 /**
- * Return a cached narrative when one is fresher than {@link ANALYSIS_TTL_MS},
- * otherwise generate a new one via the LLM and persist it. Pass `force` to
- * bypass the cache.
+ * Return the cached narrative if one exists, otherwise generate it once via the
+ * LLM and persist it. The thesis is generated a single time per pick (the
+ * scanner calls this with `force` right after creating a pick), then served from
+ * cache forever — clicking "Analysis" never burns tokens. Pass `force` to
+ * generate a fresh narrative regardless of any existing cache.
  */
 export async function getOrCreateAnalysis(
   rawSymbol: string,
@@ -50,7 +48,7 @@ export async function getOrCreateAnalysis(
       .orderBy(desc(analysisCache.createdAt))
       .limit(1);
 
-    if (cached && Date.now() - cached.createdAt.getTime() < ANALYSIS_TTL_MS) {
+    if (cached) {
       return {
         symbol,
         model: cached.model,

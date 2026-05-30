@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import YahooFinance from "yahoo-finance2";
+import { getOrCreateAnalysis } from "./analysis";
 import { db } from "./db";
 import { getFundamentals, getHistory, getQuote } from "./market";
 import { picks } from "./schema";
@@ -148,6 +149,15 @@ export async function runScan(): Promise<ScanSummary> {
       });
       savedSymbols.push(symbol);
       stillOpen.add(symbol);
+
+      // Pre-generate the AI thesis once, now, so it's instantly available (and
+      // free) when a member opens the pick. A failure here (e.g. no API key)
+      // must not drop the pick — it can be generated lazily on first view.
+      try {
+        await getOrCreateAnalysis(symbol, true);
+      } catch {
+        // best-effort; leave for lazy generation
+      }
     } catch (err) {
       errors.push({
         symbol,

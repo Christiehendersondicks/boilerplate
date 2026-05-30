@@ -68,12 +68,12 @@ export function AnalysisDialog({ symbol }: { symbol: string }) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="w-full">
           <Sparkles className="size-4" />
-          AI Analysis
+          Analysis
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-mono">{symbol} — AI Analysis</DialogTitle>
+          <DialogTitle className="font-mono">{symbol} — Analysis</DialogTitle>
           <DialogDescription>
             Generated equity research thesis. Analysis only, not financial
             advice.
