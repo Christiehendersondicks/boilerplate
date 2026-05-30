@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { WhopProvider } from "@/components/whop-provider";
 import type { Metadata } from "next";
 
 const geistSans = Geist({
@@ -97,10 +98,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SiteHeader />
-          <main id="main-content" className="flex-1">{children}</main>
-          <SiteFooter />
-          <Toaster richColors position="top-right" />
+          {/* Provides the Whop iframe SDK to client components when embedded
+              inside whop.com; passes through when NEXT_PUBLIC_WHOP_APP_ID is unset. */}
+          <WhopProvider>
+            <SiteHeader />
+            <main id="main-content" className="flex-1">{children}</main>
+            <SiteFooter />
+            <Toaster richColors position="top-right" />
+          </WhopProvider>
         </ThemeProvider>
       </body>
     </html>

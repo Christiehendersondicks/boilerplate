@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { AnalysisDialog } from "@/components/picks/analysis-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -147,6 +148,8 @@ export function PickCard({ pick, watched, onToggleWatch }: PickCardProps) {
             </ResponsiveContainer>
           </div>
         )}
+
+        <AnalysisDialog symbol={pick.symbol} />
       </CardContent>
     </Card>
   );

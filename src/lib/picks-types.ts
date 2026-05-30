@@ -36,3 +36,19 @@ export interface WatchItem {
   symbol: string;
   createdAt: string;
 }
+
+export interface Narrative {
+  summary: string;
+  bull: string[];
+  bear: string[];
+  risks: string[];
+  recommendation: string;
+}
+
+export interface AnalysisResult {
+  symbol: string;
+  model: string | null;
+  narrative: Narrative;
+  createdAt: string;
+  cached: boolean;
+}
