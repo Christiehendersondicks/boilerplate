@@ -14,7 +14,6 @@ export async function GET(req: Request) {
 
   const url = new URL(req.url);
   const symbol = url.searchParams.get("symbol");
-  const force = url.searchParams.get("refresh") === "1";
   if (!symbol) {
     return NextResponse.json(
       { error: "Missing ?symbol query parameter" },
@@ -23,7 +22,8 @@ export async function GET(req: Request) {
   }
 
   try {
-    const analysis = await getOrCreateAnalysis(symbol, force);
+    // Lazy server-side generation on first view; members cannot force a refresh.
+    const analysis = await getOrCreateAnalysis(symbol);
     return NextResponse.json(analysis);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Analysis failed";

@@ -33,12 +33,12 @@ export function AnalysisDialog({ symbol }: { symbol: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function load(force = false) {
+  async function load() {
     setLoading(true);
     setError(null);
     try {
       const res = await fetch(
-        `/api/analysis?symbol=${encodeURIComponent(symbol)}${force ? "&refresh=1" : ""}`,
+        `/api/analysis?symbol=${encodeURIComponent(symbol)}`,
         { cache: "no-store" }
       );
       if (res.status === 401) {
@@ -103,20 +103,9 @@ export function AnalysisDialog({ symbol }: { symbol: string }) {
               <span className="font-semibold">Takeaway: </span>
               {data.narrative.recommendation}
             </div>
-            <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
-              <span>
-                {data.cached ? "Cached" : "Fresh"} ·{" "}
-                {new Date(data.createdAt).toLocaleString()}
-                {data.model ? ` · ${data.model}` : ""}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => load(true)}
-                disabled={loading}
-              >
-                Regenerate
-              </Button>
+            <div className="pt-2 text-xs text-muted-foreground">
+              Updated {new Date(data.createdAt).toLocaleString()}
+              {data.model ? ` · ${data.model}` : ""}
             </div>
           </div>
         )}

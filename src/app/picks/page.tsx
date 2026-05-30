@@ -1,11 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { PickCard } from "@/components/picks/pick-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Pick, WatchItem } from "@/lib/picks-types";
 
@@ -13,8 +11,6 @@ export default function PicksPage() {
   const [picks, setPicks] = useState<Pick[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [watched, setWatched] = useState<Set<string>>(new Set());
-  const [symbols, setSymbols] = useState("");
-  const [generating, setGenerating] = useState(false);
 
   const loadPicks = useCallback(async () => {
     try {
@@ -88,43 +84,6 @@ export default function PicksPage() {
     [watched]
   );
 
-  async function handleGenerate(e: React.FormEvent) {
-    e.preventDefault();
-    const list = symbols
-      .split(/[\s,]+/)
-      .map((s) => s.trim().toUpperCase())
-      .filter(Boolean);
-    if (list.length === 0) return;
-
-    setGenerating(true);
-    try {
-      const res = await fetch("/api/picks/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ symbols: list }),
-      });
-      if (res.status === 401) {
-        toast.error("Sign in through Whop to generate picks.");
-        return;
-      }
-      if (!res.ok) throw new Error();
-      const data = (await res.json()) as {
-        generated: unknown[];
-        failed: { symbol: string }[];
-      };
-      toast.success(
-        `Generated ${data.generated.length} pick(s)` +
-          (data.failed.length ? `, ${data.failed.length} failed` : "")
-      );
-      setSymbols("");
-      await loadPicks();
-    } catch {
-      toast.error("Failed to generate picks.");
-    } finally {
-      setGenerating(false);
-    }
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mx-auto max-w-4xl space-y-8">
@@ -135,30 +94,10 @@ export default function PicksPage() {
           <div>
             <h1 className="text-3xl font-bold">Picks</h1>
             <p className="text-sm text-muted-foreground">
-              Technical + fundamental signals, freshest first.
+              High-conviction buys, generated daily after market close.
             </p>
           </div>
         </header>
-
-        <form onSubmit={handleGenerate} className="flex gap-2">
-          <Input
-            value={symbols}
-            onChange={(e) => setSymbols(e.target.value)}
-            placeholder="Symbols e.g. AAPL, MSFT, NVDA"
-            aria-label="Symbols to analyze"
-            disabled={generating}
-          />
-          <Button type="submit" disabled={generating || !symbols.trim()}>
-            {generating ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                Scoring
-              </>
-            ) : (
-              "Generate"
-            )}
-          </Button>
-        </form>
 
         {error && (
           <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
@@ -174,7 +113,8 @@ export default function PicksPage() {
           </div>
         ) : picks.length === 0 && !error ? (
           <div className="rounded-lg border border-dashed border-border py-16 text-center text-muted-foreground">
-            No picks yet. Enter symbols above to generate your first batch.
+            No picks yet. The scanner publishes new buys after each market
+            close — check back soon.
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

@@ -29,7 +29,7 @@ const FEATURES = [
   {
     icon: Sparkles,
     title: "AI research thesis",
-    body: "One click generates a grounded equity-research narrative per symbol: summary, bull case, bear case, and the key risks to watch.",
+    body: "Every pick carries a grounded equity-research narrative: summary, bull case, bear case, and the key risks to watch.",
   },
   {
     icon: Star,
@@ -41,18 +41,18 @@ const FEATURES = [
 const STEPS = [
   {
     n: 1,
-    title: "Enter symbols",
-    body: "Drop in tickers like AAPL, MSFT, NVDA and hit Generate.",
+    title: "We scan the market",
+    body: "After each close the scanner sweeps the day's most active and trending names.",
   },
   {
     n: 2,
-    title: "Engine scores them",
-    body: "Live market data runs through the technical + fundamental model.",
+    title: "Only high-conviction buys post",
+    body: "Each name runs through the technical + fundamental model; only strong buy signals make the board.",
   },
   {
     n: 3,
-    title: "Decide & track",
-    body: "Read the AI thesis, note the levels, and star what you're watching.",
+    title: "You read & track",
+    body: "Open a pick for its AI thesis and price levels, and star what you're watching.",
   },
 ] as const;
 
@@ -129,8 +129,8 @@ export default function Home() {
         <section className="rounded-lg border bg-accent/40 px-6 py-12 text-center">
           <h2 className="text-2xl font-semibold">Ready to see today&apos;s picks?</h2>
           <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
-            Generate signals for any ticker and get the full breakdown in
-            seconds.
+            Fresh high-conviction buys land after every market close, each with
+            its full breakdown.
           </p>
           <Button asChild size="lg" className="mt-6">
             <Link href="/picks">Open Picks</Link>
