@@ -126,8 +126,8 @@ export default function Home() {
         <section className="rounded-lg border bg-accent/40 px-6 py-12 text-center">
           <h2 className="text-2xl font-semibold">Ready to see today&apos;s picks?</h2>
           <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
-            Fresh high-conviction buys land after every market close, each with
-            its full breakdown.
+            Fresh high-conviction buys land about an hour before every market
+            close, each with its full breakdown.
           </p>
           <Button asChild size="lg" className="mt-6">
             <Link href="/picks">Open Picks</Link>
