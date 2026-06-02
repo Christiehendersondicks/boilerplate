@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { History } from "lucide-react";
+import { buttonVariants } from "./ui/button";
 import { ModeToggle } from "./ui/mode-toggle";
 
 export function SiteHeader() {
@@ -42,6 +44,13 @@ export function SiteHeader() {
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               Picks
+            </Link>
+            <Link
+              href="/journal"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              <History className="size-4" />
+              Journal
             </Link>
             <ModeToggle />
           </div>
