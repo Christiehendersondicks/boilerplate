@@ -3,7 +3,7 @@ import YahooFinance from "yahoo-finance2";
 import { getOrCreateAnalysis } from "./analysis";
 import { db } from "./db";
 import { getFundamentals, getHistory, getQuote } from "./market";
-import { picks } from "./schema";
+import { picks, scanRuns } from "./schema";
 import { priceLevels, scoreSymbol } from "./scoring";
 
 const yahooFinance = new YahooFinance({ suppressNotices: ["yahooSurvey"] });
@@ -110,6 +110,42 @@ async function reconcileOpenPicks(): Promise<{
 export async function runScan(): Promise<ScanSummary> {
   const threshold = convictionThreshold();
 
+  try {
+    const summary = await scan(threshold);
+    // Heartbeat: record the successful run so /api/health can tell the scanner
+    // is alive even on days that legitimately save 0 picks.
+    await db.insert(scanRuns).values({
+      ok: true,
+      scanned: summary.scanned,
+      saved: summary.saved,
+      closed: summary.closed,
+      threshold: summary.threshold,
+      errorCount: summary.errors.length,
+      detail: {
+        savedSymbols: summary.savedSymbols,
+        closedSymbols: summary.closedSymbols,
+        errors: summary.errors,
+      },
+    });
+    return summary;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Scan failed";
+    // Best-effort failure heartbeat; never let a logging error mask the real one.
+    try {
+      await db.insert(scanRuns).values({
+        ok: false,
+        threshold,
+        detail: { error: message },
+      });
+    } catch {
+      /* ignore */
+    }
+    throw err;
+  }
+}
+
+/** The actual scan work; wrapped by runScan() which records the heartbeat. */
+async function scan(threshold: number): Promise<ScanSummary> {
   const { closed, stillOpen } = await reconcileOpenPicks();
   const universe = await buildUniverse();
 

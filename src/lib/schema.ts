@@ -122,6 +122,27 @@ export const picks = pgTable(
   ]
 );
 
+// Heartbeat: one row per scan run (success or failure). This is the source of
+// truth for "is the autonomous scanner still alive?" — unlike picks/quote_cache
+// it is written ONLY by runScan, so its freshness can't be faked by user
+// traffic. Powers /api/health and the dead-cron alert.
+export const scanRuns = pgTable(
+  "scan_runs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    ranAt: timestamp("ran_at").defaultNow().notNull(),
+    ok: boolean("ok").notNull(),
+    scanned: integer("scanned").notNull().default(0),
+    saved: integer("saved").notNull().default(0),
+    closed: integer("closed").notNull().default(0),
+    threshold: integer("threshold"),
+    errorCount: integer("error_count").notNull().default(0),
+    // savedSymbols / closedSymbols / per-symbol errors / failure message
+    detail: jsonb("detail"),
+  },
+  (table) => [index("scan_runs_ran_at_idx").on(table.ranAt)]
+);
+
 export const analysisCache = pgTable(
   "analysis_cache",
   {

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendAlert } from "@/lib/alerts";
 import { runScan } from "@/lib/scanner";
 
 // Scans can take a while (many symbols × upstream calls); give the function
@@ -25,9 +26,21 @@ async function handle(req: Request): Promise<Response> {
 
   try {
     const summary = await runScan();
+    // Partial failure: scan completed but some symbols errored (e.g. Yahoo
+    // hiccup). Surface it without failing the run.
+    const firstError = summary.errors[0];
+    if (firstError) {
+      await sendAlert(
+        `⚠️ Stock Picks scan completed with ${summary.errors.length} symbol error(s). ` +
+          `Scanned ${summary.scanned}, saved ${summary.saved}. ` +
+          `First: ${firstError.symbol} — ${firstError.error}`
+      );
+    }
     return NextResponse.json({ ok: true, ...summary });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Scan failed";
+    // Hard failure: the whole scan threw (DB down, universe build failed, etc).
+    await sendAlert(`🚨 Stock Picks scan FAILED: ${message}`);
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }
