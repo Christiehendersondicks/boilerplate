@@ -7,8 +7,10 @@ import { picks, scanRuns } from "@/lib/schema";
 export const dynamic = "force-dynamic";
 
 const HOUR = 60 * 60 * 1000;
-// Must match the cron schedule in vercel.json (`0 19 * * 1-5`).
-const SCAN_HOUR_UTC = 19;
+// Must match the cron schedule in vercel.json (`0 18 * * 1-5`). 18:00 UTC =
+// 14:00 EDT / 13:00 EST, ~2h before the 16:00 ET close — buffer that survives a
+// worst-case Hobby-tier cron delay (~1h) and still lands before the bell.
+const SCAN_HOUR_UTC = 18;
 // Allow this much slack after a slot before we consider it "missed"
 // (cron jitter + scan runtime + a retry).
 const GRACE_HOURS = 3;
